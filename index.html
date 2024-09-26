@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manhwa Chapters</title>
+    <style>
+        img {
+            width: 100%;
+            max-width: 500px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Manhwa Chapter Images</h1>
+    <div id="image-container"></div>
+
+    <script>
+        async function fetchChapters() {
+            try {
+                // Fetch the chapter image links from the Express server
+                const response = await fetch('http://localhost:3000/chapters');
+                const imageLinks = await response.json();
+
+                const imageContainer = document.getElementById('image-container');
+
+                // Loop through the array of image links and create <img> elements
+                imageLinks.forEach(link => {
+                    const img = document.createElement('img');
+                    img.src = link; // Set the src attribute to the image link
+                    imageContainer.appendChild(img); // Append the image to the container
+                });
+            } catch (error) {
+                console.error("Error fetching chapters:", error);
+            }
+        }
+
+        // Call the function to fetch and display chapters
+        fetchChapters();
+    </script>
+</body>
+</html>
