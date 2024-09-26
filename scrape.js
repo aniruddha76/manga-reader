@@ -3,7 +3,9 @@ import axios from "axios";
 export default async function getManhwaChapters(searchQuery) {
 
     var nameToSearch = searchQuery.replace(/ /g, "-");
-    console.log(nameToSearch);
+    // console.log(nameToSearch);
+
+    var mangaResponse = [];
 
     try {
         const response = await axios.get(`https://manhwa18.cc/webtoon/${nameToSearch}`);
@@ -25,9 +27,10 @@ export default async function getManhwaChapters(searchQuery) {
             const image = imageMatch[1].trim(); // Access the captured group and trim whitespace
             const summary = summaryMatch[1].trim(); // Access the captured group and trim whitespace
 
-            console.log(title)
-            console.log(summary)
-            console.log(image)
+            mangaResponse.push(title, image, summary)
+            // console.log(title)
+            // console.log(summary)
+            // console.log(image)
         }
         
         // const imgRegex = /<img[^>]+src="(https?:\/\/img05\.mnhwa002\.xyz[^">]+)"/g;
@@ -37,7 +40,7 @@ export default async function getManhwaChapters(searchQuery) {
         //     chapterPages.push(match[1]);
         // }
 
-        // return chapterPages;
+        return mangaResponse;
     } catch (error) {
         console.error("Error fetching the webpage:", error);
     }

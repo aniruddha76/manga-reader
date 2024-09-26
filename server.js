@@ -1,8 +1,11 @@
 import express from "express";
-import getManhwaChapters from "./scrape.js"; // Your scraping logic
+import getManhwaChapters from "./scrape.js"; 
+import cors from "cors";
 
 const app = express();
 const port = 3001;
+
+app.use(cors());
 
 app.get('/', (req, res) => {
     res.send("Server is Running OK!");
