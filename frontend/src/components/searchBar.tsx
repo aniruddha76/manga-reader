@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export const description =
   "An orders dashboard with a sidebar navigation. The sidebar has icon navigation. The content area has a breadcrumb and search in the header. The main area has a list of recent orders with a filter and export button. The main area also has a detailed view of a single order with order details, shipping information, billing information, customer information, and payment information."
@@ -83,22 +84,29 @@ export function Dashboard() {
                 className="sm:col-span-2 flex" x-chunk="dashboard-05-chunk-0"
               >
                 <CardDescription className="p-2">
-                  <Image 
-                    className="rounded overflow-hidden bg-cover"
-                    height={100}
-                    width={100}
-                    src={results ? results[1] : "/"}
-                    alt="Image"
-                  />
+                  <div className="relative h-[280px] w-[200px]">
+                    {results ? (
+                      <Image
+                        className="rounded overflow-hidden object-cover"
+                        src={results[1]}
+                        alt="Image"
+                        fill
+                        sizes="500px"
+                      />
+                    ) : (
+                      <Skeleton className="h-[280px] w-[200px] rounded-xl" /> // Render Skeleton when `results` is not available
+                    )}
+                  </div>
                 </CardDescription>
 
                 <div>
                   <CardHeader className="pb-3 px-2">
                     <CardDescription>Manga / Manhwa</CardDescription>
-                    <CardTitle className="text-4xl">{results ? results[0] : 'Loading...'}</CardTitle>
-                    {/* <CardDescription className="text-balance max-w-lg leading-relaxed">
-                      
-                    </CardDescription> */}
+                    <CardTitle className="text-4xl">{results ? results[0] : <Skeleton className="h-[50px] w-[200px] rounded-xl" />}</CardTitle>
+
+                    <CardDescription>Description</CardDescription>
+                    <CardContent className="text-m p-0">{results ? results[2] : <Skeleton className="h-[100px] w-[300px] rounded-xl" />}</CardContent>
+
                   </CardHeader>
                   <CardFooter className="space-x-2  px-2">
                     <Button>Read First</Button>
