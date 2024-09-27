@@ -1,6 +1,17 @@
 import axios from "axios";
 
 export default async function getManhwaChapters(searchQuery) {
+    const decodeHtmlEntities = (text) => {
+        return text
+          .replace(/&rsquo;/g, "’") // right single quotation mark
+          .replace(/&lsquo;/g, "‘") // left single quotation mark
+          .replace(/&ldquo;/g, "“") // left double quotation mark
+          .replace(/&rdquo;/g, "”") // right double quotation mark
+          .replace(/&hellip;/g, "…") // ellipsis
+          .replace(/&amp;/g, "&") // ampersand
+          .replace(/&lt;/g, "<") // less than symbol
+          .replace(/&gt;/g, ">"); // greater than symbol
+      };
 
     var nameToSearch = searchQuery.replace(/ /g, "-");
     // console.log(nameToSearch);
@@ -27,7 +38,10 @@ export default async function getManhwaChapters(searchQuery) {
             const image = imageMatch[1].trim(); // Access the captured group and trim whitespace
             const summary = summaryMatch[1].trim(); // Access the captured group and trim whitespace
 
-            mangaResponse.push(title, image, summary)
+            
+            let modifiedSummary = decodeHtmlEntities(summary);
+
+            mangaResponse.push(title, image, modifiedSummary)
             // console.log(title)
             // console.log(summary)
             // console.log(image)
