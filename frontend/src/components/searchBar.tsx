@@ -4,11 +4,8 @@ import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
 import {
-  Copy,
-  CreditCard,
   Home,
   Search,
-  Truck,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -24,10 +21,6 @@ import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
-
-const tags = Array.from({ length: 50 }).map(
-  (_, i, a) => `v1.2.0-beta.${a.length - i}`
-)
 
 export const description =
   "An orders dashboard with a sidebar navigation. The sidebar has icon navigation. The content area has a breadcrumb and search in the header. The main area has a list of recent orders with a filter and export button. The main area also has a detailed view of a single order with order details, shipping information, billing information, customer information, and payment information."
@@ -87,29 +80,42 @@ export function Dashboard() {
           <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
               <Card
-                className="sm:col-span-2" x-chunk="dashboard-05-chunk-0"
+                className="sm:col-span-2 flex" x-chunk="dashboard-05-chunk-0"
               >
-                <CardHeader className="pb-3">
-                  <CardDescription>Manga / Manhwa</CardDescription>
-                  <CardTitle className="text-4xl">{results ? results[0] : 'Loading...'}</CardTitle>
-                  {/* <CardDescription className="text-balance max-w-lg leading-relaxed">
-                    
-                  </CardDescription> */}
-                </CardHeader>
-                <CardFooter className="space-x-2">
-                  <Button>Read First</Button>
-                  <Button>Read Last</Button>
-                </CardFooter>
+                <CardDescription className="p-2">
+                  <Image 
+                    className="rounded overflow-hidden bg-cover"
+                    height={100}
+                    width={100}
+                    src={results ? results[1] : "/"}
+                    alt="Image"
+                  />
+                </CardDescription>
+
+                <div>
+                  <CardHeader className="pb-3 px-2">
+                    <CardDescription>Manga / Manhwa</CardDescription>
+                    <CardTitle className="text-4xl">{results ? results[0] : 'Loading...'}</CardTitle>
+                    {/* <CardDescription className="text-balance max-w-lg leading-relaxed">
+                      
+                    </CardDescription> */}
+                  </CardHeader>
+                  <CardFooter className="space-x-2  px-2">
+                    <Button>Read First</Button>
+                    <Button>Read Last</Button>
+                  </CardFooter>
+                </div>
+
               </Card>
 
               <Card x-chunk="dashboard-05-chunk-1">
                 <CardHeader className="pb-2">
                   <CardDescription>Description</CardDescription>
-                  <CardTitle className="text-m">{results ? results[2] : "Loading..."}</CardTitle>
+                  <CardContent className="text-m p-0">{results ? results[2] : "Loading..."}</CardContent>
                 </CardHeader>
                 <CardContent>
                   <div className="text-xs text-muted-foreground">
-                    +25% from last week
+                    *Extracted from external website
                   </div>
                 </CardContent>
               </Card>
@@ -135,7 +141,7 @@ export function Dashboard() {
             >
               <CardHeader className="flex flex-row items-start bg-muted/50">
                 <div className="grid gap-0.5">
-                  <CardTitle className="group flex items-center gap-2 text-lg">
+                  <CardTitle className="group flex items-center gap-2 text-2xl">
                     Chapters
                   </CardTitle>
                   <CardDescription>Date: November 23, 2023</CardDescription>
@@ -144,17 +150,19 @@ export function Dashboard() {
               </CardHeader>
               <CardContent className="p-6 text-sm">
                 <ScrollArea className="h-72">
-                  <div>
-                    {tags.map((tag) => (
-                      <>
-                        <div key={tag} className="text-sm">
-                          {tag}
-                        </div>
+                  {results && results[3] && Array.isArray(results[3]) && results[3].length > 0 ? (
+                    results[3].map((chapter, index) => (
+                      <div key={index}>
+                        {chapter}
                         <Separator className="my-2" />
-                      </>
-                    ))}
-                  </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-sm">No chapters available.</div>
+                  )}
                 </ScrollArea>
+
+
               </CardContent>
               <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
                 <div className="text-xs text-muted-foreground">

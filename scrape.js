@@ -28,20 +28,22 @@ export default async function getManhwaChapters(searchQuery) {
         const mangaTitle = /<h1>\s*<span>.*?<\/span>\s*([^<]+)\s*<\/h1>/;
         const mangaImage = /<div class="summary_image">\s*<a href=".*?" title=".*?">\s*<img[^>]+src="([^"]+)"[^>]*>\s*<\/a>\s*<\/div>/;
         const mangaSummary = /<div class="panel-story-description">\s*<h2 class="manga-panel-title wleft">.*?<\/h2>\s*<div class="dsct">\s*<p>(.*?)<\/p>\s*<\/div>\s*<\/div>/;
+        const mangaChapters = /<a class="chapter-name text-nowrap" href=".*?" title=".*?">(Chapter \d+)<\/a>/g;
 
         const titleMatch = mangaData.match(mangaTitle);
         const imageMatch = mangaData.match(mangaImage);
         const summaryMatch = mangaData.match(mangaSummary);
+        const chaptersMatch = [...mangaData.matchAll(mangaChapters)];
 
         if (titleMatch) {
             const title = titleMatch[1].trim(); // Access the captured group and trim whitespace
             const image = imageMatch[1].trim(); // Access the captured group and trim whitespace
             const summary = summaryMatch[1].trim(); // Access the captured group and trim whitespace
-
+            const chapters = chaptersMatch.map(match => match[1].trim()); // Get all captured chapter groups
             
             let modifiedSummary = decodeHtmlEntities(summary);
 
-            mangaResponse.push(title, image, modifiedSummary)
+            mangaResponse.push(title, image, modifiedSummary, chapters)
             // console.log(title)
             // console.log(summary)
             // console.log(image)
@@ -56,7 +58,14 @@ export default async function getManhwaChapters(searchQuery) {
 
         return mangaResponse;
     } catch (error) {
-        console.error("Error fetching the webpage:", error);
-    }
+        if (error.response && error.response.status === 404) {
+            mangaResponse.push("Yo! Whatever you're searching ain't here!");
+            return mangaResponse; 
+        } else {
+            console.error("Error fetching the webpage:", error);
+            mangaResponse.push("An error occurred while fetching data.");
+            return mangaResponse; 
+        }
 
-}
+    }
+} 
