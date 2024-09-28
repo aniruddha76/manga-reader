@@ -36,7 +36,7 @@ export function Dashboard() {
     if (!searchTerm) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/chapters?search=${searchTerm}`, {
+      const response = await fetch(`http://localhost:3001/webtoon?search=${searchTerm}`, {
         method: "GET",
       });
       const data = await response.json();
@@ -165,7 +165,9 @@ export function Dashboard() {
                   {results && results[5] && Array.isArray(results[5]) && results[5].length > 0 ? (
                     results[5].map((chapter, index) => (
                       <div key={index}>
-                        {chapter}
+                        <Link href={`/webtoon?name=${results ? results[0] : ""}&chapter=${chapter.split(" ")[1]}`}>
+                          {chapter}
+                        </Link>
                         <Separator className="my-2" />
                       </div>
                     ))

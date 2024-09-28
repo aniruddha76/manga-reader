@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export default async function getManhwaChapters(searchQuery) {
+export default async function getManhwa(searchQuery) {
     const decodeHtmlEntities = (text) => {
         return text
           .replace(/&rsquo;/g, "’") // right single quotation mark
