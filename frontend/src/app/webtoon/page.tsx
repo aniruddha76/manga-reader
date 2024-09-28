@@ -88,10 +88,12 @@ export default function Webtoon() {
                             results.map((url, index) => (
                                 <div key={index} className="relative h-full w-full"> {/* Set a height and width for the container */}
                                     <Image
+                                        width={800}
+                                        height={800}
                                         src={url}
                                         alt={`Chapter image ${index + 1}`}
-                                        fill
-                                        style={{ objectFit: "cover" }} // Set object fit style
+                                        sizes="100%"
+                                        className="rounded object-cover"
                                     />
                                 </div>
                             ))
