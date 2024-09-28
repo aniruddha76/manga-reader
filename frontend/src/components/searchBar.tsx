@@ -3,6 +3,7 @@
 import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { useState } from "react"
 import {
   Home,
   Search,
@@ -17,11 +18,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+
 import { Input } from "@/components/ui/input"
-import { useState } from "react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
+import { ModeToggle } from "./theme-button"
 
 export const description =
   "An orders dashboard with a sidebar navigation. The sidebar has icon navigation. The content area has a breadcrumb and search in the header. The main area has a list of recent orders with a filter and export button. The main area also has a detailed view of a single order with order details, shipping information, billing information, customer information, and payment information."
@@ -54,15 +56,15 @@ export function Dashboard() {
             className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
           >
             <Home className="h-4 w-4 transition-all group-hover:scale-110" />
-            <span className="sr-only">Acme Inc</span>
+            <span className="sr-only">Manga Reader</span>
           </Link>
         </nav>
       </aside>
 
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
 
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          <div className="relative ml-auto flex-1 md:grow-0">
+        <header className="sticky top-0 z-30 flex h-14 items-center justify-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+          <div className="relative flex-1 md:grow-0">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <div className="flex space-x-2">
               <Input
@@ -75,6 +77,9 @@ export function Dashboard() {
               <Button type="submit" onClick={handleSearch}>Search</Button>
             </div>
           </div>
+
+          <ModeToggle />
+        
         </header>
 
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
@@ -83,11 +88,11 @@ export function Dashboard() {
               <Card
                 className="sm:col-span-2 flex" x-chunk="dashboard-05-chunk-0"
               >
-                <CardDescription className="p-2">
+                <Card className="p-2 border-none shadow-none">
                   <div className="relative h-[280px] w-[200px]">
                     {results ? (
                       <Image
-                        className="rounded overflow-hidden object-cover"
+                        className="rounded object-cover"
                         src={results[1]}
                         alt="Image"
                         fill
@@ -97,18 +102,18 @@ export function Dashboard() {
                       <Skeleton className="h-[280px] w-[200px] rounded-xl" /> // Render Skeleton when `results` is not available
                     )}
                   </div>
-                </CardDescription>
+                </Card>
 
                 <div>
                   <CardHeader className="pb-3 px-2">
                     <CardDescription>Manga / Manhwa</CardDescription>
-                    <CardTitle className="text-4xl">{results ? results[0] : <Skeleton className="h-[50px] w-[200px] rounded-xl" />}</CardTitle>
+                    <CardTitle className="text-4xl">{results ? results[0] : "Loading..."}</CardTitle>
 
                     <CardDescription>Description</CardDescription>
-                    <CardContent className="text-m p-0">{results ? results[2] : <Skeleton className="h-[100px] w-[300px] rounded-xl" />}</CardContent>
+                    <CardContent className="text-m p-0">{results ? results[4] : "Loading..."}</CardContent>
 
                   </CardHeader>
-                  <CardFooter className="space-x-2  px-2">
+                  <CardFooter className="space-x-2 px-2">
                     <Button>Read First</Button>
                     <Button>Read Last</Button>
                   </CardFooter>
@@ -118,8 +123,8 @@ export function Dashboard() {
 
               <Card x-chunk="dashboard-05-chunk-1">
                 <CardHeader className="pb-2">
-                  <CardDescription>Description</CardDescription>
-                  <CardContent className="text-m p-0">{results ? results[2] : "Loading..."}</CardContent>
+                  <CardDescription>Author</CardDescription>
+                  <CardTitle className="text-2xl">{results ? results[2] : "Loading..."}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-xs text-muted-foreground">
@@ -127,22 +132,21 @@ export function Dashboard() {
                   </div>
                 </CardContent>
               </Card>
-
-              {/* <Card x-chunk="dashboard-05-chunk-2">
+              
+              <Card x-chunk="dashboard-05-chunk-1">
                 <CardHeader className="pb-2">
-                  <CardDescription>This Month</CardDescription>
-                  <CardTitle className="text-4xl">$5,329</CardTitle>
+                  <CardDescription>Artist</CardDescription>
+                  <CardTitle className="text-2xl">{results ? results[3] : "Loading..."}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-xs text-muted-foreground">
-                    +10% from last month
+                    *Extracted from external website
                   </div>
                 </CardContent>
-              </Card> */}
-
+              </Card>
             </div>
-
           </div>
+
           <div>
             <Card
               className="overflow-hidden" x-chunk="dashboard-05-chunk-4"
@@ -157,9 +161,9 @@ export function Dashboard() {
 
               </CardHeader>
               <CardContent className="p-6 text-sm">
-                <ScrollArea className="h-72">
-                  {results && results[3] && Array.isArray(results[3]) && results[3].length > 0 ? (
-                    results[3].map((chapter, index) => (
+                <ScrollArea className="h-[22rem]">
+                  {results && results[5] && Array.isArray(results[5]) && results[5].length > 0 ? (
+                    results[5].map((chapter, index) => (
                       <div key={index}>
                         {chapter}
                         <Separator className="my-2" />
