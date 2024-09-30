@@ -3,26 +3,21 @@ import axios from "axios";
 export default async function getManhwa(searchQuery) {
     const decodeHtmlEntities = (text) => {
         return text
-          .replace(/&rsquo;/g, "’") // right single quotation mark
-          .replace(/&lsquo;/g, "‘") // left single quotation mark
-          .replace(/&ldquo;/g, "“") // left double quotation mark
-          .replace(/&rdquo;/g, "”") // right double quotation mark
-          .replace(/&hellip;/g, "…") // ellipsis
-          .replace(/&amp;/g, "&") // ampersand
-          .replace(/&lt;/g, "<") // less than symbol
-          .replace(/&gt;/g, ">"); // greater than symbol
-      };
+            .replace(/&rsquo;/g, "’") // right single quotation mark
+            .replace(/&lsquo;/g, "‘") // left single quotation mark
+            .replace(/&ldquo;/g, "“") // left double quotation mark
+            .replace(/&rdquo;/g, "”") // right double quotation mark
+            .replace(/&hellip;/g, "…") // ellipsis
+            .replace(/&amp;/g, "&") // ampersand
+            .replace(/&lt;/g, "<") // less than symbol
+            .replace(/&gt;/g, ">"); // greater than symbol
+    };
 
-    var nameToSearch = searchQuery.replace(/ /g, "-");
-    // console.log(nameToSearch);
-
-    var mangaResponse = [];
+    const nameToSearch = searchQuery.replace(/ /g, "-");
 
     try {
         const response = await axios.get(`https://manhwa18.cc/webtoon/${nameToSearch}`);
         const mangaData = response.data;
-
-        // console.log(mangaData);
 
         // Regular expression to extract manga data
         const mangaTitle = /<h1>\s*<span>.*?<\/span>\s*([^<]+)\s*<\/h1>/;
@@ -40,38 +35,32 @@ export default async function getManhwa(searchQuery) {
         const chaptersMatch = [...mangaData.matchAll(mangaChapters)];
 
         if (titleMatch) {
-            const title = titleMatch[1].trim(); 
-            const image = imageMatch[1].trim(); 
-            const author = authorMatch[1].trim(); 
+            const title = titleMatch[1].trim();
+            const image = imageMatch[1].trim();
+            const author = authorMatch[1].trim();
             const artist = artistMatch[1].trim();
-            const summary = summaryMatch[1].trim(); 
-            const chapters = chaptersMatch.map(match => match[1].trim()); 
-            
-            let modifiedSummary = decodeHtmlEntities(summary);
+            const summary = decodeHtmlEntities(summaryMatch[1].trim());
+            const chapters = chaptersMatch.map(match => match[1].trim());
 
-            mangaResponse.push(title, image, author, artist, modifiedSummary, chapters)
-            // console.log(title)
-            // console.log(summary)
-            // console.log(image)
+            // Returning data in object format
+            return {
+                title: title,
+                image: image,
+                author: author,
+                artist: artist,
+                summary: summary,
+                chapters: chapters
+            };
         }
         
-        // const imgRegex = /<img[^>]+src="(https?:\/\/img05\.mnhwa002\.xyz[^">]+)"/g;
-        // let match;
-
-        // while ((match = imgRegex.exec(mangaData)) !== null) {
-        //     chapterPages.push(match[1]);
-        // }
-
-        return mangaResponse;
+        return { message: "No data found for the given query." };
+        
     } catch (error) {
         if (error.response && error.response.status === 404) {
-            mangaResponse.push("Yo! Whatever you're searching ain't here!");
-            return mangaResponse; 
+            return { message: "Yo! Whatever you're searching ain't here!" };
         } else {
             console.error("Error fetching the webpage:", error);
-            mangaResponse.push("An error occurred while fetching data.");
-            return mangaResponse; 
+            return { message: "An error occurred while fetching data." };
         }
-
     }
-} 
+}

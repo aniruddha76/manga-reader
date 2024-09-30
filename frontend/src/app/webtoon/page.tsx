@@ -15,6 +15,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Webtoon() {
     const searchParams = useSearchParams();
@@ -28,37 +29,40 @@ export default function Webtoon() {
 
     useEffect(() => {
         if (webtoonName && chapter) {
-            setSearchTerm(`${webtoonName} ${chapter}`);
+            const newSearchTerm = `${webtoonName} ${chapter}`;
+            setSearchTerm(newSearchTerm);
+            console.log("Constructed search term:", newSearchTerm);
         }
-    }, [webtoonName, chapter]);
+    }, [webtoonName, chapter]);    
 
     useEffect(() => {
         const handleSearch = async () => {
             if (!searchTerm) return;
-
+    
+            console.log("Calling API with search term:", searchTerm); // Add this log
+    
             try {
                 const response = await fetch(`http://localhost:3001/chapters?search=${searchTerm}`, {
                     method: "GET",
                 });
                 const data = await response.json();
-
-                // Log the response to check its structure
-                console.log(data);
-
+                console.log("API response data:", data); // Log the response
+    
                 if (Array.isArray(data)) {
-                    setResults(data); // Store the API response
+                    setResults(data);
                 } else {
                     console.error("Unexpected data structure:", data);
-                    setResults([]); // Reset results if the structure is invalid
+                    setResults([]);
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
-                setResults([]); // Reset results on error
+                setResults([]);
             }
         };
-
+    
         handleSearch();
-    }, [searchTerm]); // Run this effect when searchTerm changes
+    }, [searchTerm]);
+    
 
     return (
         <main>
@@ -98,7 +102,7 @@ export default function Webtoon() {
                                 </div>
                             ))
                         ) : (
-                            <div className="text-sm">No chapters available.</div>
+                            <Skeleton className="h-[34rem] w-[38rem]" />
                         )}
                     </div>
                 </ScrollArea>
