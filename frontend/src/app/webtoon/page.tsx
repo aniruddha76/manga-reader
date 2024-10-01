@@ -15,7 +15,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Webtoon() {
     const searchParams = useSearchParams();
@@ -86,7 +85,6 @@ export default function Webtoon() {
                     </Select>
                 </header>
 
-                <ScrollArea className="h-[35rem] w-[40rem] rounded-md border">
                     <div className="p-4">
                         {results && Array.isArray(results) && results.length > 0 ? (
                             results.map((url, index) => (
@@ -102,10 +100,9 @@ export default function Webtoon() {
                                 </div>
                             ))
                         ) : (
-                            <Skeleton className="h-[34rem] w-[38rem]" />
+                            <div className="text-sm">No chapters available.</div>
                         )}
                     </div>
-                </ScrollArea>
             </div>
         </main>
     );

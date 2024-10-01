@@ -60,7 +60,9 @@ export function Dashboard() {
       <div className="flex flex-col sm:gap-4 sm:py-4">
 
         <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          <Button type="button" className="rounded-e-3xl"><Home className="h-4 w-4"/></Button>
+          
+          <Button type="button"><Home className="h-4 w-4"/></Button>
+          
           <div className="relative flex-1 md:grow-0">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <div className="flex space-x-2">

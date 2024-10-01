@@ -34,11 +34,10 @@ export default async function getManhwaChapters(manhwaName, chapter, retries = 5
             let match;
 
             while ((match = imgRegex.exec(mangaData)) !== null) {
-                chapterPages.push(match[1]); 
+                chapterPages.push(match[1]);
             }
 
             if (chapterPages.length > 0) {
-                // console.log("Chapter pages found:", chapterPages);
                 return chapterPages;
             }
 
