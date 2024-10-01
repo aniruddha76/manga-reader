@@ -20,6 +20,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ModeToggle } from "./theme-button"
+import { useWebtoon } from "@/context/WebtoonContext";
 
 interface Webtoon {
   title: string;
@@ -33,16 +34,18 @@ interface Webtoon {
 export function Dashboard() {
   const [searchTerm, setSearchTerm] = useState(""); // store the input value
   const [results, setResults] = useState<Webtoon | null>(null); // store the API response
+  const { setChapters } = useWebtoon();
 
   const handleSearch = async () => {
     if (!searchTerm) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/webtoon?search=${searchTerm}`, {
+      const response = await fetch(`https://manhwa18-scrape-api.vercel.app/webtoon?search=${searchTerm}`, {
         method: "GET",
       });
       const data = await response.json();
       setResults(data); // Store the API response
+      setChapters(data.chapters);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -52,17 +55,17 @@ export function Dashboard() {
     if (e.key === "Enter") {
       handleSearch();
     }
-  };  
+  };
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
 
       <div className="flex flex-col sm:gap-4 sm:py-4">
 
-        <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          
-          <Button type="button"><Home className="h-4 w-4"/></Button>
-          
+        <header className="sticky top-0 z-30 flex h-14 items-center justify-end gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+
+          {/* <Button type="button"><Home className="h-4 w-4" /></Button> */}
+
           <div className="relative flex-1 md:grow-0">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <div className="flex space-x-2">
@@ -74,23 +77,22 @@ export function Dashboard() {
                 onKeyDown={handleKeyDown}
                 className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
               />
-              
+
               <Button type="button" onClick={handleSearch}>Search</Button>
             </div>
           </div>
 
           <ModeToggle />
-        
+
         </header>
 
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
           <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
             <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
 
-              <Card
-                className="sm:col-span-2 flex" x-chunk="dashboard-05-chunk-0"
-              >
+              <Card className="sm:col-span-2 sm:flex" x-chunk="dashboard-05-chunk-0">
                 <Card className="p-2 border-none shadow-none">
+                  <center>
                   <div className="relative h-[280px] w-[200px]">
                     {results && results.image ? (
                       <Image
@@ -104,6 +106,7 @@ export function Dashboard() {
                       <Skeleton className="h-[280px] w-[200px] rounded-xl" /> // Render Skeleton when `results` is not available
                     )}
                   </div>
+                  </center>
                 </Card>
 
                 <div>
@@ -138,7 +141,7 @@ export function Dashboard() {
                   </div>
                 </CardContent>
               </Card>
-              
+
               <Card x-chunk="dashboard-05-chunk-1">
                 <CardHeader className="pb-2">
                   <CardDescription>Artist</CardDescription>
@@ -153,44 +156,44 @@ export function Dashboard() {
             </div>
           </div>
 
-            <Card
-              className="overflow-hidden" x-chunk="dashboard-05-chunk-4"
-            >
-              <CardHeader className="flex flex-row items-start bg-muted/50">
-                <div className="grid gap-0.5">
-                  <CardTitle className="group flex items-center gap-2 text-2xl">
-                    Chapters
-                  </CardTitle>
-                  <CardDescription>Date: November 23, 2023</CardDescription>
-                </div>
+          <Card
+            className="overflow-hidden" x-chunk="dashboard-05-chunk-4"
+          >
+            <CardHeader className="flex flex-row items-start bg-muted/50">
+              <div className="grid gap-0.5">
+                <CardTitle className="group flex items-center gap-2 text-2xl">
+                  Chapters
+                </CardTitle>
+                <CardDescription>{results? results.title : "Loading..."}</CardDescription>
+              </div>
 
-              </CardHeader>
-              <CardContent className="p-6 text-sm">
-                <ScrollArea className="h-[22rem]">
-                  {results && results.chapters && Array.isArray(results.chapters) && results.chapters.length > 0 ? (
-                    results.chapters.map((chapter, index) => (
-                      <div key={index}>
-                        <Link href={`/webtoon?name=${results ? results.title : ""}&chapter=${chapter.split(" ")[1]}`}>
-                          {chapter}
-                        </Link>
-                        <Separator className="my-2" />
-                      </div>
-                    ))
-                  ) : (
-                    <div className="text-sm">No chapters available.</div>
-                  )}
-                </ScrollArea>
+            </CardHeader>
+            <CardContent className="p-6 text-sm">
+              <ScrollArea className="h-[22rem]">
+                {results && results.chapters && Array.isArray(results.chapters) && results.chapters.length > 0 ? (
+                  results.chapters.map((chapter, index) => (
+                    <div key={index}>
+                      <Link href={`/webtoon?name=${results ? results.title : ""}&chapter=${chapter.split(" ")[1]}`}>
+                        {chapter}
+                      </Link>
+                      <Separator className="my-2" />
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-sm">No chapters available.</div>
+                )}
+              </ScrollArea>
 
 
-              </CardContent>
-              <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
-                <div className="text-xs text-muted-foreground">
-                  Updated <time dateTime="2023-11-23">November 23, 2023</time>
-                </div>
+            </CardContent>
+            <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
+              <div className="text-xs text-muted-foreground">
+                Author notes chapters are not included in this list
+              </div>
 
-              </CardFooter>
-            </Card>
-          
+            </CardFooter>
+          </Card>
+
         </main>
       </div>
     </div>
