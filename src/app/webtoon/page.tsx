@@ -40,14 +40,14 @@ export default function Webtoon() {
         const handleSearch = async () => {
             if (!searchTerm) return;
 
-            console.log("Calling API with search term:", searchTerm); // Add this log
+            console.log("Calling API with search term:", searchTerm); 
 
             try {
                 const response = await fetch(`https://manhwa18-scrape-api.vercel.app/chapters?search=${searchTerm}`, {
                     method: "GET",
                 });
                 const data = await response.json();
-                console.log("API response data:", data); // Log the response
+                console.log("API response data:", data); 
 
                 if (Array.isArray(data)) {
                     setResults(data);
@@ -62,13 +62,12 @@ export default function Webtoon() {
         };
 
         handleSearch();
-    }, [searchTerm]); // Fetch images when searchTerm changes
+    }, [searchTerm]); // this fetch images when searchTerm changes
 
-    // Function to handle chapter selection
     const handleChapterSelect = (chapter) => {
-        setSelectedChapter(chapter); // Update the selected chapter
+        setSelectedChapter(chapter); // Updating selected chapter
         const newSearchTerm = `${webtoonName} ${chapter}`;
-        setSearchTerm(newSearchTerm); // Update search term to trigger new API call
+        setSearchTerm(newSearchTerm); 
     };
 
     return (
@@ -101,7 +100,7 @@ export default function Webtoon() {
                 <div className="p-4">
                     {results && Array.isArray(results) && results.length > 0 ? (
                         results.map((url, index) => (
-                            <div key={index} className="relative h-full w-full"> {/* Set a height and width for the container */}
+                            <div key={index} className="relative h-full w-full">
                                 <Image
                                     width={800}
                                     height={800}

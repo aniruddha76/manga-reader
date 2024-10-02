@@ -1,25 +1,21 @@
 "use client"
-
+//Usual Imports
 import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
-import { Home, Search } from "lucide-react"
 
+//components imports
+import { Home, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ModeToggle } from "./theme-button"
+
+//context import
 import { useWebtoon } from "@/context/WebtoonContext";
 
 interface Webtoon {
@@ -33,8 +29,8 @@ interface Webtoon {
 
 export function Dashboard() {
   const [searchTerm, setSearchTerm] = useState(""); // store the input value
-  const [results, setResults] = useState<Webtoon | null>(null); // store the API response
-  const { setChapters } = useWebtoon();
+  const [results, setResults] = useState<Webtoon | null>(null); // store api response
+  const { setChapters } = useWebtoon(); // set chapters in context
 
   const handleSearch = async () => {
     if (!searchTerm) return;
@@ -44,7 +40,7 @@ export function Dashboard() {
         method: "GET",
       });
       const data = await response.json();
-      setResults(data); // Store the API response
+      setResults(data);
       setChapters(data.chapters);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -59,15 +55,15 @@ export function Dashboard() {
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
-
       <div className="flex flex-col sm:gap-4 sm:py-4">
 
         <header className="sticky top-0 z-30 flex h-14 items-center justify-end gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-
+          
           {/* <Button type="button"><Home className="h-4 w-4" /></Button> */}
-
+          
           <div className="relative flex-1 md:grow-0">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            
             <div className="flex space-x-2">
               <Input
                 type="search"
@@ -103,7 +99,7 @@ export function Dashboard() {
                         sizes="500px"
                       />
                     ) : (
-                      <Skeleton className="h-[280px] w-[200px] rounded-xl" /> // Render Skeleton when `results` is not available
+                      <Skeleton className="h-[280px] w-[200px] rounded-xl" />
                     )}
                   </div>
                   </center>
@@ -127,7 +123,6 @@ export function Dashboard() {
                     </Link>
                   </CardFooter>
                 </div>
-
               </Card>
 
               <Card x-chunk="dashboard-05-chunk-1">
@@ -156,9 +151,7 @@ export function Dashboard() {
             </div>
           </div>
 
-          <Card
-            className="overflow-hidden" x-chunk="dashboard-05-chunk-4"
-          >
+          <Card className="overflow-hidden" x-chunk="dashboard-05-chunk-4">
             <CardHeader className="flex flex-row items-start bg-muted/50">
               <div className="grid gap-0.5">
                 <CardTitle className="group flex items-center gap-2 text-2xl">
