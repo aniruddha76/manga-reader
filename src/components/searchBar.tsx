@@ -1,21 +1,21 @@
 "use client"
-//Usual Imports
-import * as React from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { useState } from "react"
+// Usual Imports
+import * as React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useState, useEffect } from "react";
 
-//components imports
-import { Home, Search } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
-import { Skeleton } from "@/components/ui/skeleton"
-import { ModeToggle } from "./theme-button"
+// Components imports
+import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ModeToggle } from "./theme-button";
 
-//context import
+// Context import
 import { useWebtoon } from "@/context/WebtoonContext";
 
 interface Webtoon {
@@ -28,14 +28,42 @@ interface Webtoon {
 }
 
 export function Dashboard() {
-  const [searchTerm, setSearchTerm] = useState(""); // store the input value
-  const [results, setResults] = useState<Webtoon | null>(null); // store api response
-  const { setChapters } = useWebtoon(); // set chapters in context
+  const [searchTerm, setSearchTerm] = useState("");
+  const [results, setResults] = useState<Webtoon | null>(null);
+
+  const { setChapters } = useWebtoon(); // Set chapters in context
+  const [isLoading, setIsLoading] = useState(false); // Loading state
+
+  const manhwaNames = ["Quest-supremacy", "A-wonderful-new-world", "Queen-bee", "my-kingdom-silent-war-01", "reality-quest", "the-extra-is-too-strong"];
+
+  const fetchRandomManhwa = async () => {
+    const randomManhwa = manhwaNames[Math.floor(Math.random() * manhwaNames.length)];
+
+    try {
+      setIsLoading(true);
+      const response = await fetch(`https://manhwa18-scrape-api.vercel.app/webtoon?search=${randomManhwa}`, {
+        method: "GET",
+      });
+      const data = await response.json();
+      setResults(data);
+      setChapters(data.chapters);
+    } catch (error) {
+      console.error("Error fetching random manhwa:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Fetch the random manhwa on component mount
+  useEffect(() => {
+    fetchRandomManhwa();
+  }, []);
 
   const handleSearch = async () => {
     if (!searchTerm) return;
 
     try {
+      setIsLoading(true);
       const response = await fetch(`https://manhwa18-scrape-api.vercel.app/webtoon?search=${searchTerm}`, {
         method: "GET",
       });
@@ -44,6 +72,8 @@ export function Dashboard() {
       setChapters(data.chapters);
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -58,12 +88,10 @@ export function Dashboard() {
       <div className="flex flex-col sm:gap-4 sm:py-4">
 
         <header className="sticky top-0 z-30 flex h-14 items-center justify-end gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          
-          {/* <Button type="button"><Home className="h-4 w-4" /></Button> */}
-          
+
           <div className="relative flex-1 md:grow-0">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            
+
             <div className="flex space-x-2">
               <Input
                 type="search"
@@ -89,38 +117,51 @@ export function Dashboard() {
               <Card className="sm:col-span-2 sm:flex" x-chunk="dashboard-05-chunk-0">
                 <Card className="p-2 border-none shadow-none">
                   <center>
-                  <div className="relative h-[280px] w-[200px]">
-                    {results && results.image ? (
-                      <Image
-                        className="rounded object-cover"
-                        src={results.image}
-                        alt="Image"
-                        fill
-                        sizes="500px"
-                      />
-                    ) : (
-                      <Skeleton className="h-[280px] w-[200px] rounded-xl" />
-                    )}
-                  </div>
+                    <div className="relative h-[280px] w-[200px]">
+                      {results && results.image ? (
+                        <Image
+                          className="rounded object-cover"
+                          src={results.image}
+                          alt="Image"
+                          fill
+                          sizes="500px"
+                        />
+                      ) : (
+                        <Skeleton className="h-[280px] w-[200px] rounded-xl" />
+                      )}
+                    </div>
                   </center>
                 </Card>
 
                 <div>
                   <CardHeader className="pb-3 px-2">
                     <CardDescription>Manga / Manhwa</CardDescription>
-                    <CardTitle className="text-4xl">{results ? results.title : "Search something..!"}</CardTitle>
+                    <CardTitle className="text-4xl">{results ? results.title : "Loading..."}</CardTitle>
 
                     <CardDescription>Description</CardDescription>
                     <CardContent className="text-m p-0">{results ? results.summary : "Loading..."}</CardContent>
 
                   </CardHeader>
                   <CardFooter className="space-x-2 px-2">
-                    <Link href={`/webtoon?name=${results?.title}&chapter=${results?.chapters[results.chapters.length - 1].split(" ")[1]}`}>
-                      <Button>Read First</Button>
-                    </Link>
-                    <Link href={`/webtoon?name=${results?.title}&chapter=${results?.chapters[0].split(" ")[1]}`}>
-                      <Button>Read Last</Button>
-                    </Link>
+                    {results && results.chapters && results.chapters.length > 0 ? (
+                      <>
+                        <Link href={`/webtoon?name=${results?.title}&chapter=${results?.chapters[results.chapters.length - 1].split(" ")[1]}`}>
+                          <Button>Read First</Button>
+                        </Link>
+                        <Link href={`/webtoon?name=${results?.title}&chapter=${results?.chapters[0].split(" ")[1]}`}>
+                          <Button>Read Last</Button>
+                        </Link>
+                      </>
+                    ) : (
+                      <>
+                        <Link href={`/webtoon?name=${results?.title}&chapter=${results?.chapters[results.chapters.length - 1].split(" ")[1]}`}>
+                          <Button>Read First</Button>
+                        </Link>
+                        <Link href={`/webtoon?name=${results?.title}&chapter=${results?.chapters[0].split(" ")[1]}`}>
+                          <Button>Read Last</Button>
+                        </Link>
+                      </>
+                    )}
                   </CardFooter>
                 </div>
               </Card>
@@ -157,9 +198,8 @@ export function Dashboard() {
                 <CardTitle className="group flex items-center gap-2 text-2xl">
                   Chapters
                 </CardTitle>
-                <CardDescription>{results? results.title : "Loading..."}</CardDescription>
+                <CardDescription>{results ? results.title : "Loading..."}</CardDescription>
               </div>
-
             </CardHeader>
             <CardContent className="p-6 text-sm">
               <ScrollArea className="h-[22rem]">
@@ -176,19 +216,16 @@ export function Dashboard() {
                   <div className="text-sm">No chapters available.</div>
                 )}
               </ScrollArea>
-
-
             </CardContent>
             <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
               <div className="text-xs text-muted-foreground">
                 Author notes chapters are not included in this list
               </div>
-
             </CardFooter>
           </Card>
 
         </main>
       </div>
     </div>
-  )
+  );
 }

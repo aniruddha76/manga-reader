@@ -1,19 +1,13 @@
 "use client";
 
+//normal imports
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
+//components imports
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue,} from "@/components/ui/select";
 import { useWebtoon } from "@/context/WebtoonContext";
 
 export default function Webtoon() {
@@ -21,11 +15,12 @@ export default function Webtoon() {
     const { chapters } = useWebtoon();
 
     const name = searchParams.get("name");
-    const webtoonName = name ? name.replace(/ /g, "-") : ""; // Handle case where name is null
+    const webtoonName = name ? name.replace(/ /g, "-") : ""; 
     const chapter = searchParams.get("chapter");
 
     const [searchTerm, setSearchTerm] = useState(""); // Store the input value
     const [results, setResults] = useState([]); // Store the API response
+    
     const [selectedChapter, setSelectedChapter] = useState(chapter || ""); // Store selected chapter
 
     useEffect(() => {
