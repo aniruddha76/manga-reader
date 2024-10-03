@@ -1,35 +1,28 @@
 "use client";
 
-//normal imports
+// Normal imports
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 
-//components imports
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue,} from "@/components/ui/select";
-import { useWebtoon } from "@/context/WebtoonContext";
-
 export default function Webtoon() {
     const searchParams = useSearchParams();
-    const { chapters } = useWebtoon();
-
+    
     const name = searchParams.get("name");
     const webtoonName = name ? name.replace(/ /g, "-") : ""; 
     const chapter = searchParams.get("chapter");
 
     const [searchTerm, setSearchTerm] = useState(""); // Store the input value
     const [results, setResults] = useState([]); // Store the API response
-    
-    const [selectedChapter, setSelectedChapter] = useState(chapter || ""); // Store selected chapter
 
     useEffect(() => {
-        if (webtoonName && selectedChapter) {
-            const newSearchTerm = `${webtoonName} ${selectedChapter}`;
+        if (webtoonName && chapter) {
+            const newSearchTerm = `${webtoonName} ${chapter}`;
             setSearchTerm(newSearchTerm);
             console.log("Constructed search term:", newSearchTerm);
         }
-    }, [webtoonName, selectedChapter]);
+    }, [webtoonName, chapter]);
 
     useEffect(() => {
         const handleSearch = async () => {
@@ -59,39 +52,9 @@ export default function Webtoon() {
         handleSearch();
     }, [searchTerm]); // this fetch images when searchTerm changes
 
-    const handleChapterSelect = (chapter) => {
-        setSelectedChapter(chapter); // Updating selected chapter
-        const newSearchTerm = `${webtoonName} ${chapter}`;
-        setSearchTerm(newSearchTerm); 
-    };
-
     return (
         <main>
             <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14 items-center">
-                <header className="sticky top-0 z-30 flex h-14 items-center justify-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-                    <Select onValueChange={handleChapterSelect}>
-                        <SelectTrigger className="w-[280px]">
-                            <SelectValue placeholder="Select chapter" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectLabel>Chapters</SelectLabel>
-                                {chapters && chapters.length > 0 ? (
-                                    chapters.map((chapter, index) => (
-                                        <SelectItem key={index} value={chapter}>
-                                            {chapter}
-                                        </SelectItem>
-                                    ))
-                                ) : (
-                                    <SelectItem value="no-chapters" disabled>
-                                        No chapters available
-                                    </SelectItem>
-                                )}
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                </header>
-
                 <div className="p-4">
                     {results && Array.isArray(results) && results.length > 0 ? (
                         results.map((url, index) => (
