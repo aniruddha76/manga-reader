@@ -54,28 +54,34 @@ export default function Webtoon() {
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
-            <main>
-                <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14 items-center">
-                    <div className="p-4">
-                        {results && Array.isArray(results) && results.length > 0 ? (
-                            results.map((url, index) => (
-                                <div key={index} className="relative h-full w-full">
-                                    <Image
-                                        width={800}
-                                        height={800}
-                                        src={url}
-                                        alt={`Chapter image ${index + 1}`}
-                                        sizes="100%"
-                                        className="rounded object-cover"
-                                    />
-                                </div>
-                            ))
-                        ) : (
-                            <div className="text-sm">No chapters available.</div>
-                        )}
-                    </div>
-                </div>
-            </main>
+            <WebtoonContent results={results} />
         </Suspense>
+    );
+}
+
+function WebtoonContent({ results }: { results: string[] }) {
+    return (
+        <main>
+            <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14 items-center">
+                <div className="p-4">
+                    {results && Array.isArray(results) && results.length > 0 ? (
+                        results.map((url, index) => (
+                            <div key={index} className="relative h-full w-full">
+                                <Image
+                                    width={800}
+                                    height={800}
+                                    src={url}
+                                    alt={`Chapter image ${index + 1}`}
+                                    sizes="100%"
+                                    className="rounded object-cover"
+                                />
+                            </div>
+                        ))
+                    ) : (
+                        <div className="text-sm">No chapters available.</div>
+                    )}
+                </div>
+            </div>
+        </main>
     );
 }
