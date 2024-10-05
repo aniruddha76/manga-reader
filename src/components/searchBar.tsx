@@ -1,4 +1,4 @@
-"use client"
+"use client";
 // Usual Imports
 import * as React from "react";
 import Image from "next/image";
@@ -27,7 +27,6 @@ interface Webtoon {
 export function Dashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState<Webtoon | null>(null);
-
   const [isLoading, setIsLoading] = useState(false); // Loading state
 
   const manhwaNames = ["Quest-supremacy", "A-wonderful-new-world", "Queen-bee", "my-kingdom-silent-war-01", "reality-quest", "the-extra-is-too-strong"];
@@ -80,9 +79,7 @@ export function Dashboard() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <div className="flex flex-col sm:gap-4 sm:py-4">
-
         <header className="sticky top-0 z-30 flex h-14 items-center justify-end gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-
           <div className="relative flex-1 md:grow-0">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
 
@@ -96,23 +93,24 @@ export function Dashboard() {
                 className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
               />
 
-              <Button type="button" onClick={handleSearch}>Search</Button>
+              <Button type="button" onClick={handleSearch} disabled={isLoading}>
+                {isLoading ? "Searching..." : "Search"}
+              </Button>
             </div>
           </div>
-
           <ModeToggle />
-
         </header>
 
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
           <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
             <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
-
               <Card className="sm:col-span-2 sm:flex" x-chunk="dashboard-05-chunk-0">
                 <Card className="p-2 border-none shadow-none">
                   <center>
                     <div className="relative h-[280px] w-[200px]">
-                      {results && results.image ? (
+                      {isLoading ? (
+                        <Skeleton className="h-[280px] w-[200px] rounded-xl" />
+                      ) : results && results.image ? (
                         <Image
                           className="rounded object-cover"
                           src={results.image}
@@ -130,14 +128,12 @@ export function Dashboard() {
                 <div>
                   <CardHeader className="pb-3 px-2">
                     <CardDescription>Manga / Manhwa</CardDescription>
-                    <CardTitle className="text-4xl">{results ? results.title : "Loading..."}</CardTitle>
-
+                    <CardTitle className="text-4xl">{isLoading ? "Loading..." : results?.title}</CardTitle>
                     <CardDescription>Description</CardDescription>
-                    <CardContent className="text-m p-0">{results ? results.summary : "Loading..."}</CardContent>
-
+                    <CardContent className="text-m p-0">{isLoading ? "Loading..." : results?.summary}</CardContent>
                   </CardHeader>
                   <CardFooter className="space-x-2 px-2">
-                    {results && results.chapters && results.chapters.length > 0 ? (
+                    {results && results.chapters && results.chapters.length > 0 && !isLoading ? (
                       <>
                         <Link href={`/webtoon?name=${results?.title}&chapter=${results?.chapters[results.chapters.length - 1].split(" ")[1]}`}>
                           <Button>Read First</Button>
@@ -146,16 +142,7 @@ export function Dashboard() {
                           <Button>Read Last</Button>
                         </Link>
                       </>
-                    ) : (
-                      <>
-                        <Link href={`/webtoon?name=${results?.title}&chapter=${results?.chapters[results.chapters.length - 1].split(" ")[1]}`}>
-                          <Button>Read First</Button>
-                        </Link>
-                        <Link href={`/webtoon?name=${results?.title}&chapter=${results?.chapters[0].split(" ")[1]}`}>
-                          <Button>Read Last</Button>
-                        </Link>
-                      </>
-                    )}
+                    ) : null}
                   </CardFooter>
                 </div>
               </Card>
@@ -163,7 +150,7 @@ export function Dashboard() {
               <Card x-chunk="dashboard-05-chunk-1">
                 <CardHeader className="pb-2">
                   <CardDescription>Author</CardDescription>
-                  <CardTitle className="text-2xl">{results ? results.author : "Loading..."}</CardTitle>
+                  <CardTitle className="text-2xl">{isLoading ? "Loading..." : results?.author}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-xs text-muted-foreground">
@@ -175,7 +162,7 @@ export function Dashboard() {
               <Card x-chunk="dashboard-05-chunk-1">
                 <CardHeader className="pb-2">
                   <CardDescription>Artist</CardDescription>
-                  <CardTitle className="text-2xl">{results ? results.artist : "Loading..."}</CardTitle>
+                  <CardTitle className="text-2xl">{isLoading ? "Loading..." : results?.artist}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-xs text-muted-foreground">
@@ -192,7 +179,7 @@ export function Dashboard() {
                 <CardTitle className="group flex items-center gap-2 text-2xl">
                   Chapters
                 </CardTitle>
-                <CardDescription>{results ? results.title : "Loading..."}</CardDescription>
+                <CardDescription>{results?.title}</CardDescription>
               </div>
             </CardHeader>
             <CardContent className="p-6 text-sm">
@@ -200,7 +187,7 @@ export function Dashboard() {
                 {results && results.chapters && Array.isArray(results.chapters) && results.chapters.length > 0 ? (
                   results.chapters.map((chapter, index) => (
                     <div key={index}>
-                      <Link href={`/webtoon?name=${results ? results.title : ""}&chapter=${chapter.split(" ")[1]}`}>
+                      <Link href={`/webtoon?name=${results?.title}&chapter=${chapter.split(" ")[1]}`}>
                         {chapter}
                       </Link>
                       <Separator className="my-2" />
@@ -217,7 +204,6 @@ export function Dashboard() {
               </div>
             </CardFooter>
           </Card>
-
         </main>
       </div>
     </div>

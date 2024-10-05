@@ -13,7 +13,7 @@ export default function Webtoon() {
     const chapter = searchParams.get("chapter");
 
     const [searchTerm, setSearchTerm] = useState(""); // Store the input value
-    const [results, setResults] = useState<any[]>([]); // Store the API response
+    const [results, setResults] = useState<string[]>([]); // Store the API response
 
     useEffect(() => {
         if (webtoonName && chapter) {
@@ -49,7 +49,7 @@ export default function Webtoon() {
         };
 
         handleSearch();
-    }, [searchTerm]); // this fetch images when searchTerm changes
+    }, [searchTerm]); 
 
     return (
         <main>
