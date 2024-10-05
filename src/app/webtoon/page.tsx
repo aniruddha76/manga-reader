@@ -1,6 +1,5 @@
 "use client";
 
-// Normal imports
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
@@ -14,7 +13,7 @@ export default function Webtoon() {
     const chapter = searchParams.get("chapter");
 
     const [searchTerm, setSearchTerm] = useState(""); // Store the input value
-    const [results, setResults] = useState([]); // Store the API response
+    const [results, setResults] = useState<any[]>([]); // Store the API response
 
     useEffect(() => {
         if (webtoonName && chapter) {

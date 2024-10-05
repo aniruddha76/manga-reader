@@ -15,9 +15,6 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ModeToggle } from "./theme-button";
 
-// Context import
-import { useWebtoon } from "@/context/WebtoonContext";
-
 interface Webtoon {
   title: string;
   image: string;
@@ -31,7 +28,6 @@ export function Dashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState<Webtoon | null>(null);
 
-  const { setChapters } = useWebtoon(); // Set chapters in context
   const [isLoading, setIsLoading] = useState(false); // Loading state
 
   const manhwaNames = ["Quest-supremacy", "A-wonderful-new-world", "Queen-bee", "my-kingdom-silent-war-01", "reality-quest", "the-extra-is-too-strong"];
@@ -46,7 +42,6 @@ export function Dashboard() {
       });
       const data = await response.json();
       setResults(data);
-      setChapters(data.chapters);
     } catch (error) {
       console.error("Error fetching random manhwa:", error);
     } finally {
@@ -69,7 +64,6 @@ export function Dashboard() {
       });
       const data = await response.json();
       setResults(data);
-      setChapters(data.chapters);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
