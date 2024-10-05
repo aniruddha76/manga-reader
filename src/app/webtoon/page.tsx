@@ -4,6 +4,7 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
+import { Suspense } from "react";
 
 export default function Webtoon() {
     const searchParams = useSearchParams();
@@ -49,30 +50,32 @@ export default function Webtoon() {
         };
 
         handleSearch();
-    }, [searchTerm]); 
+    }, [searchTerm]);
 
     return (
-        <main>
-            <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14 items-center">
-                <div className="p-4">
-                    {results && Array.isArray(results) && results.length > 0 ? (
-                        results.map((url, index) => (
-                            <div key={index} className="relative h-full w-full">
-                                <Image
-                                    width={800}
-                                    height={800}
-                                    src={url}
-                                    alt={`Chapter image ${index + 1}`}
-                                    sizes="100%"
-                                    className="rounded object-cover"
-                                />
-                            </div>
-                        ))
-                    ) : (
-                        <div className="text-sm">No chapters available.</div>
-                    )}
+        <Suspense fallback={<div>Loading...</div>}>
+            <main>
+                <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14 items-center">
+                    <div className="p-4">
+                        {results && Array.isArray(results) && results.length > 0 ? (
+                            results.map((url, index) => (
+                                <div key={index} className="relative h-full w-full">
+                                    <Image
+                                        width={800}
+                                        height={800}
+                                        src={url}
+                                        alt={`Chapter image ${index + 1}`}
+                                        sizes="100%"
+                                        className="rounded object-cover"
+                                    />
+                                </div>
+                            ))
+                        ) : (
+                            <div className="text-sm">No chapters available.</div>
+                        )}
+                    </div>
                 </div>
-            </div>
-        </main>
+            </main>
+        </Suspense>
     );
 }
