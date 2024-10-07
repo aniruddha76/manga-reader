@@ -50,7 +50,13 @@ export function Dashboard() {
 
   // Fetch the random manhwa on component mount
   useEffect(() => {
-    fetchRandomManhwa();
+    const storedResults = sessionStorage.getItem("searchResults");
+
+    if (storedResults) {
+      setResults(JSON.parse(storedResults)); // Load the stored search results
+    } else {
+      fetchRandomManhwa(); // Fetch random manhwa if no stored results
+    }
   }, []);
 
   const handleSearch = async () => {
@@ -63,6 +69,9 @@ export function Dashboard() {
       });
       const data = await response.json();
       setResults(data);
+
+      //store results in session to survive nevigation
+      sessionStorage.setItem("searchResults", JSON.stringify(data));
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
