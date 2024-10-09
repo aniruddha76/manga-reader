@@ -2,12 +2,15 @@
 
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation"; // Use the router to manipulate URL
 import Image from "next/image";
 import { Suspense } from "react";
 
+import { Button } from "@/components/ui/button";
+
 export default function Webtoon() {
     const searchParams = useSearchParams();
+    const router = useRouter();
 
     const name = searchParams.get("name");
     const webtoonName = name ? name.replace(/ /g, "-") : "";
@@ -68,10 +71,29 @@ export default function Webtoon() {
         });
     };
 
+    const handleNextChapter = () => {
+        if (chapter) {
+            const nextChapter = parseInt(chapter, 10) + 1; // Increment chapter number
+            router.push(`?name=${name}&chapter=${nextChapter}`); // Update the URL
+        }
+    };
+
+    const handlePreviousChapter = () => {
+        if (chapter && parseInt(chapter, 10) > 1) {
+            const prevChapter = parseInt(chapter, 10) - 1; // Decrement chapter number
+            router.push(`?name=${name}&chapter=${prevChapter}`); // Update the URL
+        }
+    };
+
     return (
         <Suspense fallback={<div>Loading...</div>}>
             <main>
                 <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14 items-center">
+                    <div className="flex justify-between w-96">
+                        <Button variant="secondary" className="w-44" onClick={handlePreviousChapter}>Previous</Button>
+                        <Button variant="secondary" className="w-44" onClick={handleNextChapter}>Next</Button>
+                    </div>
+
                     <div className="p-4">
                         {loading ? (
                             // Show a spinner while data is being fetched
@@ -105,6 +127,11 @@ export default function Webtoon() {
                                 </div>
                             )
                         )}
+                    </div>
+
+                    <div className="flex justify-between w-96">
+                        <Button variant="secondary" className="w-44" onClick={handlePreviousChapter}>Previous</Button>
+                        <Button variant="secondary" className="w-44" onClick={handleNextChapter}>Next</Button>
                     </div>
                 </div>
             </main>
