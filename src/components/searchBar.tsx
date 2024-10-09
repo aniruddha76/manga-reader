@@ -18,6 +18,7 @@ import { ModeToggle } from "./theme-button";
 interface Webtoon {
   title: string;
   image: string;
+  slug: string;
   author: string;
   artist: string;
   summary: string;
@@ -144,10 +145,10 @@ export function Dashboard() {
                   <CardFooter className="space-x-2 px-2">
                     {results && results.chapters && results.chapters.length > 0 && !isLoading ? (
                       <>
-                        <Link href={`/webtoon?name=${results?.title}&chapter=${results?.chapters[results.chapters.length - 1].split(" ")[1]}`}>
+                        <Link href={`/webtoon?name=${results?.slug}&chapter=${results?.chapters[results.chapters.length - 1].split(" ")[1]}`}>
                           <Button>Read First</Button>
                         </Link>
-                        <Link href={`/webtoon?name=${results?.title}&chapter=${results?.chapters[0].split(" ")[1]}`}>
+                        <Link href={`/webtoon?name=${results?.slug}&chapter=${results?.chapters[0].split(" ")[1]}`}>
                           <Button>Read Last</Button>
                         </Link>
                       </>
@@ -196,7 +197,7 @@ export function Dashboard() {
                 {results && results.chapters && Array.isArray(results.chapters) && results.chapters.length > 0 ? (
                   results.chapters.map((chapter, index) => (
                     <div key={index}>
-                      <Link href={`/webtoon?name=${results?.title}&chapter=${chapter.split(" ")[1]}`}>
+                      <Link href={`/webtoon?name=${results?.slug}&chapter=${chapter.split(" ")[1]}`}>
                         {chapter}
                       </Link>
                       <Separator className="my-2" />
