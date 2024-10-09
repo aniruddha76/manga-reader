@@ -11,6 +11,6 @@ This project is an ad-free manhwa reader designed to provide a seamless reading 
 ## Known Issues
 
 1. ~~After searching for a manhwa and reading a chapter, if the user hits the back button, the searched manhwa disappears, and random manhwa loads instead.~~
-2. ~~~CORS issue: If the user tries to change chapters in the `/webtoon` route, they may encounter CORS errors.~~~
+2. ~~CORS issue: If the user tries to change chapters in the `/webtoon` route, they may encounter CORS errors.~~
 3. Chapter selection is not working in the `/webtoon` route.
-4. ~~~If there is a " ' " in chapter name then fetch error in the `/webtoon` route (e.g. "Benefactor's Daughters")~~~
+4. ~~If there is a " ' " in chapter name then fetch error in the `/webtoon` route (e.g. "Benefactor's Daughters")~~
