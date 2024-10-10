@@ -17,3 +17,4 @@ This project is an ad-free manhwa reader designed to provide a seamless reading 
 5. There is no limiter for previous and next buttons in `/webtoon`
 6. Last chapter is not listed in chapter list `/webtoon`
 7. Mid chapters like `36.5` throwing 500 chapter not found error
+8. There is still cors issue here and there while fetching chapter in `/webtoon`
