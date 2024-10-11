@@ -82,7 +82,7 @@ export default function Webtoon() {
 
   //added last chapter limiter to test
   const handleNextChapter = () => {
-    let lastChapter = results?.availableChapters[0];
+    const lastChapter = results?.availableChapters[0];
 
     if (chapter && lastChapter && parseInt(chapter, 10) <= parseInt(lastChapter, 10)) {
       const nextChapter = parseInt(chapter, 10) + 1;
