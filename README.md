@@ -19,3 +19,4 @@ This project is an ad-free manhwa reader designed to provide a seamless reading 
 7. ~~Selected Chapter gets disappeared after selection from chapter list in `/webtoon`~~ - Fixed.
 8. Mid chapters like `36.5` throwing 500 chapter not found error
 9. There is still cors issue here and there while fetching chapter in `/webtoon`
+10. First chapter to display in `/webtoon` is not listed in chapters list placeholder.
