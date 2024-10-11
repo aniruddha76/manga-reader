@@ -14,7 +14,7 @@ This project is an ad-free manhwa reader designed to provide a seamless reading 
 2. ~~CORS issue: If the user tries to change chapters in the `/webtoon` route, they may encounter CORS errors.~~ - Fixed.
 3. ~~If there is a " ' " in chapter name then fetch error in the `/webtoon` route (e.g. "Benefactor's Daughters")~~ - Fixed.
 4. ~~Chapter selection is not working in the `/webtoon` route.~~ - Fixed.
-5. There is no limiter for previous and next buttons in `/webtoon`
+5. ~~There is no limiter for previous and next buttons in `/webtoon`~~ - Fixed.
 6. ~~Last chapter is not listed in chapter list `/webtoon`~~ - Fixed.
 7. ~~Selected Chapter gets disappeared after selection from chapter list in `/webtoon`~~ - Fixed.
 8. Mid chapters like `36.5` throwing 500 chapter not found error
