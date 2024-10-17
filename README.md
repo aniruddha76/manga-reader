@@ -20,3 +20,6 @@ This project is an ad-free manhwa reader designed to provide a seamless reading 
 8. Mid chapters like `36.5` throwing 500 chapter not found error
 9. There is still cors issue here and there while fetching chapter in `/webtoon`
 10. First chapter to display in `/webtoon` is not listed in chapters list placeholder.
+11. There is no limmiter for next chapter in `/webtoon`
+12. Application isn't fetching raw manhwa
+13. ~~Image Optimization issue in vercel (free limit)~~ - Fixed
