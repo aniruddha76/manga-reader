@@ -80,14 +80,23 @@ export default function Webtoon() {
     });
   };
 
-  //added last chapter limiter to test
   const handleNextChapter = () => {
     if (chapter && parseInt(chapter, 10)) {
       const nextChapter = parseInt(chapter, 10) + 1;
-      router.push(`?name=${name}&chapter=${nextChapter}`);
+      if (results?.availableChapters && results.availableChapters.length > 0) {
+        const lowestChapter = parseInt(results.availableChapters[0].replace("Chapter ", ""), 10); // Assuming "Chapter X" format
+
+        if (nextChapter <= lowestChapter) {
+          router.push(`?name=${name}&chapter=${nextChapter}`);
+        } else {
+          router.push('/');
+        }
+
+      }
+
     }
   };
-  
+
 
   const handlePreviousChapter = () => {
     if (chapter && parseInt(chapter, 10) > 1) {
